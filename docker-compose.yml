@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  alpine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: linux
+    restart: always
+    stdin_open: true
+    tty: true
+    links:
+      - database:postgres
+    networks:
+      - bnetwork
+
+  database:
+    image: postgres:11.7-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=casadocodigo
+    ports:
+      - '5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - bnetwork
+
+volumes:
+  db:
+
+networks:
+  bnetwork:
+    driver: bridge
